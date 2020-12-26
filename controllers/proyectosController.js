@@ -1,4 +1,5 @@
 const Proyectos = require("../models/Proyectos");
+const Tareas = require("../models/Tareas");
 
 exports.proyectosHome = async (req, res) => {
   try {
@@ -68,10 +69,16 @@ exports.proyectoPorUrl = async (req, res) => {
       return next();
     }
 
+    const tareas = await Tareas.findAll({
+      where: { proyectoId: proyecto.id },
+      // include: [{ model: Proyectos }],
+    });
+
     res.render("tareas", {
       nombrePagina: "Tareas del Proyecto",
       proyecto,
       proyectos,
+      tareas,
     });
   } catch (error) {
     console.log(error);
@@ -99,7 +106,7 @@ exports.formularioEditar = async (req, res) => {
       proyecto,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -125,7 +132,7 @@ exports.actualizarProyecto = async (req, res) => {
     try {
       await Proyectos.update(
         { nombre: nombre },
-        { where: { id: req.params.id }}
+        { where: { id: req.params.id } }
       );
       res.redirect("/");
     } catch (error) {
@@ -134,16 +141,15 @@ exports.actualizarProyecto = async (req, res) => {
   }
 };
 
-exports.eliminarProyecto = async (req,res, next) => {
-
+exports.eliminarProyecto = async (req, res, next) => {
   try {
-    const {urlProyecto} = req.query;
+    const { urlProyecto } = req.query;
 
-    const resultado = await Proyectos.destroy({ where: { url: urlProyecto }})
+    const resultado = await Proyectos.destroy({ where: { url: urlProyecto } });
 
     res.status(200).send("Proyecto Eliminado Correctamente");
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    return next();
   }
-}
+};
