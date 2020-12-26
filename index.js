@@ -28,6 +28,8 @@ app.set("views", path.join(__dirname, "./views"));
 
 // Pasar vardump a la aplicación
 app.use((req, res, next) => {
+  const fecha = new Date();
+  res.locals.year = fecha.getFullYear();
   res.locals.vardump = helpers.vardump;
   next();
 });
