@@ -260,6 +260,7 @@ body.index {
 }
 .correcto p {
     color: green;
+    font-size: .9rem;
 }
 
 /** Linea de Avance **/
